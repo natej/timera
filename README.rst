@@ -36,8 +36,8 @@ Install
 
 .. code-block:: bash
 
-    # cd Timera
-    # make install
+    $ cd Timera
+    $ make install
 
 Or if using a virtual environment:
 
@@ -71,8 +71,9 @@ Create db and start collecting stats:
 Optional
 --------
 
-Use Supervisor to run Timera. See the `contrib dir <https://github.com/natej/timera/blob/master/contrib/>`_.
-Supervisor requires Python 2 (``pip install supervisor``).
+Use `Supervisor <https://github.com/Supervisor/supervisor>`_ to run Timera. See the
+`contrib dir <https://github.com/natej/timera/blob/master/contrib/>`_. Supervisor requires
+Python 2 (``pip install supervisor``).
 
 Viewing Stats with Grafana
 --------------------------
