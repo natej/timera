@@ -24,16 +24,17 @@ def main(argv):
     try:
         cmd, config_fname, action = timera.main.get_args(argv)
     except timera.exc.TimeraInvalidArgs:
-        return
+        return 1
     config = timera.main.parse_config(config_fname)
     if action == 'reset_db':
         timera.main.reset_db(config)
-        return
+        return 0
     debug = timera.util.asbool(config.get('main', 'debug'))
     setup_log(debug)
     timera.main.setup_env()
     timera.collector.run_loop(config)
+    return 0
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    sys.exit(main(sys.argv))
