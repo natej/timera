@@ -31,6 +31,7 @@ setup(
     description='Store stats in InfluxDB.',
     long_description=read('README.rst'),
     author='Nathan Jennings',
+    author_email='natej.git@gmail.com',
     url='https://github.com/natej/timera',
     license=read('LICENSE.txt'),
     packages=find_packages(exclude=('.cache', 'contrib', 'docs', 'tests'))
