@@ -21,7 +21,10 @@ def setup_log(debug):
 
 
 def main(argv):
-    cmd, config_fname, action = timera.main.get_args(argv)
+    try:
+        cmd, config_fname, action = timera.main.get_args(argv)
+    except timera.exc.TimeraInvalidArgs:
+        return
     config = timera.main.parse_config(config_fname)
     if action == 'reset_db':
         timera.main.reset_db(config)

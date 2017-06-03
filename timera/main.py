@@ -14,6 +14,8 @@ except ImportError:
     # noinspection PyUnresolvedReferences
     from configparser import ConfigParser
 
+from .exc import TimeraInvalidArgs
+
 log = logging.getLogger(__name__)
 
 
@@ -59,5 +61,5 @@ def get_args(argv):
     actions = ['start', 'reset_db']
     if len(argv) != 3 or argv[2] not in actions:
         print_usage(argv)
-        raise ValueError('invalid arguments: %r' % argv)
+        raise TimeraInvalidArgs('invalid arguments: %r' % argv)
     return argv

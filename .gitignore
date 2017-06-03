@@ -2,7 +2,8 @@
 *.egg-info
 *.egg-info/
 .eggs/
-*.pyc
+__pycache__/
+*.py[cod]
 *$py.class
 *~
 .*.swp
