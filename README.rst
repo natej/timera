@@ -3,6 +3,12 @@ Timera
 
 Store stats in InfluxDB.
 
+.. figure:: docs/img/plugin-httptimer-grafana-dashboard-1.png
+   :scale: 50 %
+   :alt: Grafana Dashboard
+
+   Grafana Dashboard
+
 There's currently one plugin included with Timera, httptimer.
 
 With httptimer, you can store the time it takes to get http responses. For example:
