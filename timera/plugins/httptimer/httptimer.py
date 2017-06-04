@@ -86,6 +86,5 @@ def get_proxy_name(proxy_url):
 
 
 def write_stats(idbc, measurementd):
-    kwargs = dict(time_precision='s')
     # write stats to db
-    timera.db.write_points(idbc, [measurementd], kwargs=kwargs)
+    timera.db.write_points(idbc, [measurementd])

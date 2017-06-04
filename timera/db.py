@@ -82,4 +82,6 @@ def write_points(idbc, points, kwargs=None):
     """
     if kwargs is None:
         kwargs = {}
+    if 'time_precision' not in kwargs:
+        kwargs['time_precision'] = 's'
     idbc.write_points(points, **kwargs)
