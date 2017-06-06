@@ -42,25 +42,27 @@ Install
 
 .. code-block:: bash
 
-    $ cd Timera
-    $ make install
+    $ pip install timera
 
 Or if using a virtual environment:
 
 .. code-block:: bash
 
     $ source env/bin/activate
-    $ cd Timera
-    $ make install
+    $ pip install timera
 
-Use ``make install-dev`` to install in edit mode (``pip install -e .``) with pytest:
+Development Install
+-------------------
+
+Use ``make install-dev`` to install in editable mode (``pip install -e .``) with pytest and tox:
 
 .. code-block:: bash
 
     $ source env/bin/activate
-    $ cd Timera
+    $ cd timera-master
     $ make install-dev
     $ make test
+    $ tox
 
 Run It
 ------
@@ -69,10 +71,9 @@ Create db and start collecting stats:
 
 .. code-block:: bash
 
-    $ cd Timera
     # edit config.ini
-    $ ./timera-run.py config.ini reset_db
-    $ ./timera-run.py config.ini start
+    $ timera config.ini reset_db
+    $ timera config.ini start
 
 Optional
 --------

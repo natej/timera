@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import datetime
 import logging
 
@@ -60,3 +61,17 @@ def asbool(obj):
 def parse_url(url):
     parsed = urlparse(url)
     return parsed
+
+
+def delete_proxy_env():
+    """Delete proxy vars from environment that may influence behavior.
+    https://docs.python.org/2/library/os.html?highlight=os.environ#os.environ
+    When unsetenv() is supported, deletion of items in os.environ is automatically translated
+    into a corresponding call to unsetenv(); however, calls to unsetenv() don't update os.environ,
+    so it is actually preferable to delete items of os.environ.
+    Availability: most flavors of Unix, Windows.
+    """
+    keys = [ 'no_proxy', 'NO_PROXY', 'http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PROXY' ]
+    for key in keys:
+        if key in os.environ:
+            del os.environ[key]

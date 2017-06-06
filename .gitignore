@@ -1,6 +1,5 @@
 *.egg
 *.egg-info
-*.egg-info/
 .eggs/
 __pycache__/
 *.py[cod]
@@ -18,4 +17,5 @@ dist/
 .idea/
 distribute-*.tar.gz
 env*/
+.tox/
 venv/

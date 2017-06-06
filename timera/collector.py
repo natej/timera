@@ -53,7 +53,7 @@ def run_loop(config):
     collect_interval = max(2, config.getint('main', 'collector.interval'))
     num_collect_threads = config.getint('main', 'collector.threads')
     run_list = get_run_list(config)
-    log.info('found %d timers in config' % len(run_list))
+    log.info('found %d entries in config' % len(run_list))
     collect_queue = threadio.start_workers(num_collect_threads)
     while True:
         """
