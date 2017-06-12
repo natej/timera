@@ -32,7 +32,7 @@ SUPERVISORCTL=$PREFIX/python2.7/bin/supervisorctl
 PIDFILE=$PREFIX/run/timera-supervisord.pid
 LOCKFILE=$PREFIX/lock/subsys/timera-supervisord
 
-OPTIONS="-c /app/etc/timera-supervisord.conf"
+OPTIONS="-c /app/timera/etc/timera-supervisord.conf"
 
 # unset this variable if you don't care to wait for child processes to shutdown before removing the $LOCKFILE-lock
 WAIT_FOR_SUBPROCESSES=yes

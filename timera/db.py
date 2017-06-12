@@ -24,7 +24,7 @@ def get_client(config):
     db.port = 8086
     db.username = user
     db.password = pass
-    db.name = mystats
+    db.name = mymetrics
     """
     db = InfluxDBClient(host=config.get('main', 'db.host'),
                         port=config.getint('main', 'db.port'),

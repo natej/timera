@@ -24,16 +24,16 @@ log = logging.getLogger(__name__)
 def start_workers(num_threads):
     queue = Queue()
     for i in range(num_threads):
-        name = 'StatsThread-' + str(i + 1)
-        t = StatsThread(name=name, target=None, args=(queue,), kwargs={})
+        name = 'MetricsThread-' + str(i + 1)
+        t = MetricsThread(name=name, target=None, args=(queue,), kwargs={})
         t.start()
     return queue
 
 
-class StatsThread(threading.Thread):
+class MetricsThread(threading.Thread):
 
     def __init__(self, group=None, target=None, name=None, args=(), kwargs=None):
-        super(StatsThread, self).__init__(group=group, target=target, name=name, args=args, kwargs=kwargs)
+        super(MetricsThread, self).__init__(group=group, target=target, name=name, args=args, kwargs=kwargs)
         self.args = args
         self.kwargs = kwargs if kwargs is not None else {}
         self.daemon = True
@@ -58,11 +58,17 @@ class StatsThread(threading.Thread):
         config = item['config']
         timestamp = item['timestamp']
         plugin = item['plugin']
-        plugin_modname = 'timera.plugins.' + plugin['type']
+
+        if plugin['config'].get('plugin_import'):
+            plugin_modname = plugin['config'].get('plugin_import')
+        else:
+            plugin_modname = 'timera.plugins.' + plugin['type']
+
         try:
             plugin_modref = importlib.import_module(plugin_modname)
         except:
-            raise ValueError('exception importing timer module "%s":\n%s' % (plugin_modname, traceback.format_exc()))
+            raise ImportError('exception importing plugin module "%s":\n%s' % (plugin_modname, traceback.format_exc()))
         else:
-            get_stats = getattr(plugin_modref, 'get_stats')
-        get_stats(config, timestamp, plugin)
+            get_metrics = getattr(plugin_modref, 'get_metrics')
+
+        get_metrics(config, timestamp, plugin)

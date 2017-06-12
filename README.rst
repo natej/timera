@@ -1,7 +1,7 @@
 Timera
 ======
 
-Store stats in InfluxDB.
+Store metrics in InfluxDB.
 
 .. figure:: docs/img/plugin-httptimer-grafana-dashboard-1.png
    :scale: 50 %
@@ -23,13 +23,53 @@ With ``httptimer``, you can store the time it takes to get http responses. For e
 
 See the config file, `config.ini <https://github.com/natej/timera/blob/master/config.ini>`_, for options.
 
-Use any InfluxDB-compatible visualization software to view your stats. For example:
+Use any InfluxDB-compatible visualization software to view your metrics. For example:
 
 - `Chronograf <https://portal.influxdata.com/downloads>`_
 - `Grafana <http://docs.grafana.org/features/datasources/influxdb/>`_
 
-Timera has a simple plugin system. So it's easy to write your own plugin to collect the stats you want.
-Use `httptimer <https://github.com/natej/timera/blob/master/timera/plugins/httptimer/>`_  as an example.
+Plugins
+-------
+
+Timera has a simple plugin system. So it's easy to write your own plugin to collect and store the metrics you want.
+See the custom plugin below and the included plugin
+`httptimer <https://github.com/natej/timera/blob/master/timera/plugins/httptimer/>`_ for examples.
+
+Config file:
+
+.. code-block:: ini
+
+    [mymetrics_plugin_01]
+    plugin_import = mymetrics.metrics
+    name = cpu_load_short
+    field = value
+
+``mymetrics/metrics.py``:
+
+.. code-block:: python
+
+    import logging
+    import timera
+
+    log = logging.getLogger(__name__)
+
+    def get_metrics(config, timestamp, plugin):
+        """
+        :param config: ConfigParser instance
+        :param timestamp: unix timestamp (seconds since epoch) for current collection interval
+        :param plugin: dict with parsed plugin values
+        """
+        measurement = plugin['config']['name']
+        field = plugin['config']['field']
+        metric = 0.64
+        fields = {field: str(metric)}
+        tags = {'host': 'server01', 'region': 'us-west'}
+        log.info('%s %r: %s=%f' % (measurement, tags, field, metric))
+        measurementd = dict(measurement=measurement, time=timestamp, fields=fields, tags=tags)
+        idbc = timera.db.get_client(config)
+        timera.db.write_points(idbc, [measurementd])
+
+If you create a plugin you think others would find useful, please submit a PR with tests for inclusion in Timera.
 
 Requirements
 ------------
@@ -67,7 +107,7 @@ Use ``make install-dev`` to install in editable mode (``pip install -e .``) with
 Run It
 ------
 
-Create db and start collecting stats:
+Create db and start collecting metrics:
 
 .. code-block:: bash
 
@@ -82,8 +122,8 @@ Use `Supervisor <https://github.com/Supervisor/supervisor>`_ to run Timera. See 
 `contrib dir <https://github.com/natej/timera/blob/master/contrib/>`_. Supervisor requires
 Python 2 (``pip install supervisor``).
 
-Viewing Stats with Grafana
---------------------------
+Viewing Metrics with Grafana
+----------------------------
 
 Configure `InfluxDB as a datasource <http://docs.grafana.org/features/datasources/influxdb/>`_.
 
@@ -95,3 +135,13 @@ configure the query:
    :alt: Grafana Metrics Tab
 
    Grafana Metrics Tab
+
+Changes
+-------
+
+See `CHANGES.rst <https://github.com/natej/timera/blob/master/CHANGES.rst>`_.
+
+License
+-------
+
+Timera is provided under the MIT License. See `LICENSE.txt <https://github.com/natej/timera/blob/master/LICENSE.txt>`_.

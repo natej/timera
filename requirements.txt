@@ -1,2 +1,2 @@
-influxdb
-requests
+influxdb>=4.1.0
+requests>=2.15.0

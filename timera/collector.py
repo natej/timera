@@ -5,6 +5,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import time
+import importlib
+import traceback
 import logging
 
 __all__ = ['run_loop']
@@ -21,16 +23,32 @@ def get_config_section(config, section):
     return d
 
 
+def check_import(config, dist_plugin_names, plugin_name, section):
+    """raise if import fails"""
+    if config.has_option(section, 'plugin_import'):
+        plugin_import = config.get(section, 'plugin_import')
+        try:
+            modref = importlib.import_module(plugin_import)
+        except:
+            raise ValueError('invalid config section "%s": custom plugin import failed for "%s":\n%s' %
+                             (section, plugin_import, traceback.format_exc()))
+        if not getattr(modref, 'get_metrics', None):
+            raise ValueError('invalid config section "%s": get_metrics not found in custom plugin "%s"' %
+                             (section, plugin_import))
+    elif plugin_name not in dist_plugin_names:
+        raise ValueError('invalid config section "%s": plugin "%s" not found' % (section, plugin_name))
+
+
 def get_run_list(config):
     from . import plugins
-    plugin_names = [m for m in dir(plugins) if not m.startswith('_')]
+    dist_plugin_names = [m for m in dir(plugins) if not m.startswith('_')]
     run_list = []
     sections = config.sections()
     for section in sections:
         plugin_name = section.split('_', 2)[0]
         if section.startswith(plugin_name + '_plugin_'):
-            if plugin_name not in plugin_names:
-                raise ValueError('invalid config section "%s": plugin not found' % section)
+            # make sure we can import plugins; we want to see failures now
+            check_import(config, dist_plugin_names, plugin_name, section)
             d = dict(type=None, config=None)
             d['type'] = plugin_name
             d['config'] = get_config_section(config, section)
@@ -51,6 +69,7 @@ def run_loop(config):
     from . import threadio
     from . import util
     collect_interval = max(2, config.getint('main', 'collector.interval'))
+    collect_ts_utc = util.asbool(config.get('main', 'collector.timestamp.utc'))
     num_collect_threads = config.getint('main', 'collector.threads')
     run_list = get_run_list(config)
     log.info('found %d entries in config' % len(run_list))
@@ -72,7 +91,7 @@ def run_loop(config):
         log.debug('sleeping %d seconds until next collection interval' % next_interval)
         time.sleep(next_interval)
         # create timestamp for this collection interval
-        timestamp = util.get_unix_now()
+        timestamp = util.get_unix_now(utc=collect_ts_utc)
         log.info('collection interval starting')
         enqueue_plugins(run_list, collect_queue, config, timestamp)
         # wait until queue is drained

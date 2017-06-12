@@ -45,12 +45,12 @@ def test_get_url():
         proxy = plugin['config'].get('proxy')
         include_direct = timera.util.asbool(plugin['config'].get('include_direct'))
         if not proxy or include_direct:
-            # get stats using direct connection
-            stats_direct = timera.plugins.httptimer.get_url(config, timestamp, plugin, None)
-            timera.plugins.httptimer.write_stats(idbc, stats_direct)
+            # get metrics using direct connection
+            metrics_direct = timera.plugins.httptimer.get_url(config, timestamp, plugin, None)
+            timera.plugins.httptimer.write_metrics(idbc, metrics_direct)
         if proxy:
-            # get stats using proxy
-            stats_proxy = timera.plugins.httptimer.get_url(config, timestamp, plugin, proxy)
-            timera.plugins.httptimer.write_stats(idbc, stats_proxy)
+            # get metrics using proxy
+            metrics_proxy = timera.plugins.httptimer.get_url(config, timestamp, plugin, proxy)
+            timera.plugins.httptimer.write_metrics(idbc, metrics_proxy)
     # make sure socket is closed
     idbc._session.close()

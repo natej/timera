@@ -1,4 +1,4 @@
-This is the MIT license: http://www.opensource.org/licenses/mit-license.php
+This is the MIT License: https://opensource.org/licenses/MIT
 
 Copyright (c) 2017 the Timera authors and contributors <see AUTHORS.txt file>.
 

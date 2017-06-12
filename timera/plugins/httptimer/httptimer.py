@@ -18,7 +18,12 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 # required by all plugin modules, called by worker thread
-def get_stats(config, timestamp, plugin):
+def get_metrics(config, timestamp, plugin):
+    """
+    :param config: ConfigParser instance
+    :param timestamp: unix timestamp (seconds since epoch) for current collection interval
+    :param plugin: dict with parsed plugin values
+    """
     do_work(config, timestamp, plugin)
 
 
@@ -33,19 +38,19 @@ def do_work(config, timestamp, plugin):
     proxy = plugin['config'].get('proxy')
     include_direct = timera.util.asbool(plugin['config'].get('include_direct'))
     if not proxy or include_direct:
-        # get stats using direct connection
-        stats_direct = get_url(config, timestamp, plugin, None)
-        write_stats(idbc, stats_direct)
+        # get metrics using direct connection
+        metrics_direct = get_url(config, timestamp, plugin, None)
+        write_metrics(idbc, metrics_direct)
     if proxy:
-        # get stats using proxy
-        stats_proxy = get_url(config, timestamp, plugin, proxy)
-        write_stats(idbc, stats_proxy)
+        # get metrics using proxy
+        metrics_proxy = get_url(config, timestamp, plugin, proxy)
+        write_metrics(idbc, metrics_proxy)
     # make sure socket is closed
     idbc._session.close()
 
 
 def get_url(config, timestamp, plugin, proxy):
-    # return stats: measurementd
+    # return metrics: measurementd
     connect_timeout = float(config.get('main', 'plugins.httptimer.connect_timeout'))
     read_timeout = float(config.get('main', 'plugins.httptimer.read_timeout'))
     name = plugin['config']['name']
@@ -85,6 +90,6 @@ def get_proxy_name(proxy_url):
     return parsed[1]
 
 
-def write_stats(idbc, measurementd):
-    # write stats to db
+def write_metrics(idbc, measurementd):
+    # write metrics to db
     timera.db.write_points(idbc, [measurementd])

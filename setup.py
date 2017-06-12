@@ -30,7 +30,7 @@ def get_requirements(*file_paths):
 setup(
     name='timera',
     version=find_version('timera', '__init__.py'),
-    description='Store stats in InfluxDB.',
+    description='Store metrics in InfluxDB.',
     long_description=read('README.rst'),
     keywords='influxdb system network monitoring',
     author='Nathan Jennings',
