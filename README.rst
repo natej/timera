@@ -35,7 +35,7 @@ Timera has a simple plugin system. So it's easy to write your own plugin to coll
 See the custom plugin below and the included plugin
 `httptimer <https://github.com/natej/timera/blob/master/timera/plugins/httptimer/>`_ for examples.
 
-Config file:
+``config.ini``:
 
 .. code-block:: ini
 
